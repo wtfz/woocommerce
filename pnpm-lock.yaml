@@ -359,6 +359,9 @@ importers:
       webpack: 5.70.0_webpack-cli@3.3.12
       webpack-cli: 3.3.12_webpack@5.70.0
 
+  packages/js/create-block-template:
+    specifiers: {}
+
   packages/js/csv-export:
     specifiers:
       '@babel/core': ^7.17.5
@@ -13713,6 +13716,7 @@ packages:
       re-resizable: 4.11.0
     transitivePeerDependencies:
       - react
+      - react-dom
     dev: true
 
   /@types/wordpress__compose/4.0.1:
@@ -18579,7 +18583,7 @@ packages:
     dev: true
 
   /buffer-crc32/0.2.13:
-    resolution: {integrity: sha1-DTM+PwDqxQqhRUq9MO+MKl2ackI=}
+    resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
 
   /buffer-fill/1.0.0:
     resolution: {integrity: sha1-+PeLdniYiO858gXNY39o5wISKyw=}
