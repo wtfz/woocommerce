@@ -15,6 +15,12 @@
 			"options": {
 				"script": "build"
 			}
+		},
+		"lint": {
+			"executor": "@nrwl/workspace:run-script",
+			"options": {
+				"script": "lint"
+			}
 		}
 	}
 }
