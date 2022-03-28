@@ -1,11 +1,7 @@
 name: Lint and tests for JS packages and woocommerce-admin/client
 
 on:
-  pull_request:
-    paths:
-      - 'packages/js/**/**'
-      - 'plugins/woocommerce-admin/client/**'
-      - '!**.md'
+  push
 
 jobs:
   lint-test-js:
