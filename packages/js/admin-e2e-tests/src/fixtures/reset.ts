@@ -11,7 +11,7 @@ const skippedPlugins = [
 	'woocommerce-admin',
 	'woocommerce-reset',
 	'basic-auth',
-	'wp-mail-logging'
+	'wp-mail-logging',
 ];
 
 export async function resetWooCommerceState() {
