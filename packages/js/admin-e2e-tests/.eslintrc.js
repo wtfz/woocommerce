@@ -11,6 +11,7 @@ module.exports = {
 			pragma: 'createElement',
 		},
 	},
+	root: true,
 	rules: {
 		// temporary conversion to warnings until the below are all handled.
 		'@wordpress/i18n-translator-comments': 'warn',
@@ -27,8 +28,10 @@ module.exports = {
 				],
 			},
 		],
-		'jsdoc/tag-lines': 'off',
+		'import/no-extraneous-dependencies': 'warn',
+		'import/no-unresolved': 'warn',
 		'jest/no-deprecated-functions': 'warn',
+		'@wordpress/no-unsafe-wp-apis': 'warn',
 		'jest/valid-title': 'warn',
 		'@wordpress/no-global-active-element': 'warn',
 		'no-unused-vars': [
@@ -49,6 +52,8 @@ module.exports = {
 			],
 			rules: {
 				camelcase: 'off',
+				'import/no-unresolved': 'warn',
+				'import/no-extraneous-dependencies': 'warn',
 				'@typescript-eslint/no-explicit-any': 'error',
 				'no-use-before-define': 'off',
 				'@typescript-eslint/no-use-before-define': [ 'error' ],
