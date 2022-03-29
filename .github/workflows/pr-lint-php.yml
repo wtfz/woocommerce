@@ -26,6 +26,5 @@ jobs:
       - name: Lint the PHP
         env:
             CHANGED_FILES: ${{ steps.changed-files.outputs.files }}
-        working-directory: plugins/woocommerce
-        run: bin/pr-phpcs.sh
+        run: ./plugins/woocommerce/bin/pr-phpcs.sh
         shell: bash
