@@ -1,6 +1,6 @@
 <?php
 /**
- * Container class file.
+ * Container class file. Test lint
  */
 
 namespace Automattic\WooCommerce;
