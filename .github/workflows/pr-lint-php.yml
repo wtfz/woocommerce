@@ -1,5 +1,5 @@
 name: Lint the PHP
-on: [pull_request]
+on: push
 
 jobs:
   lint-php:
