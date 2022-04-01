@@ -130,5 +130,20 @@ class RegisterTest extends WC_Unit_Test_Case {
 
 		static::$sut->enable_by_id( $approved_directory_id );
 		$this->assertTrue( static::$sut->get_by_url( 'https://foo.bar/assets/' )->is_enabled() );
+
+		$disabled_directory_url  = '//external.storage/bucket/';
+		static::$sut->add_approved_directory( $disabled_directory_url, false );
+		$disabled_directory_rule = static::$sut->get_by_url( $disabled_directory_url );
+
+		$this->assertFalse(
+			$disabled_directory_rule->is_enabled(),
+			'Disabled directory rule correctly shows as disabled.'
+		);
+
+		static::$sut->add_approved_directory( $disabled_directory_url, true );
+		$this->assertTrue(
+			static::$sut->get_by_url( $disabled_directory_url )->is_enabled(),
+			'Try to add a directory that already exists (and specifying that it should be enabled) will cause the existing rule to be set to "enabled".'
+		);
 	}
 }

@@ -6,6 +6,7 @@ use Automattic\WooCommerce\Internal\ProductDownloads\ApprovedDirectories\Admin\S
 use Automattic\WooCommerce\Internal\ProductDownloads\ApprovedDirectories\Admin\UI;
 use Automattic\WooCommerce\Internal\Utilities\URL;
 use Automattic\WooCommerce\Internal\Utilities\URLException;
+use Symfony\Component\HttpKernel\HttpCache\Store;
 
 /**
  * Maintains and manages the list of approved directories, within which product downloads can
@@ -114,7 +115,9 @@ class Register {
 		$existing = $this->get_by_url( $url );
 
 		if ( $existing ) {
-			return $existing->get_id();
+			$existing_id = $existing->get_id();
+			$this->update_approved_directory( $existing_id, $existing->get_url(), $enabled );
+			return $existing_id;
 		}
 
 		global $wpdb;
