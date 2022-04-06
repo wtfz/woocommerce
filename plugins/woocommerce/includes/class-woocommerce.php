@@ -649,12 +649,7 @@ final class WooCommerce {
 	public function load_plugin_textdomain() {
 		$locale = determine_locale();
 		$locale = apply_filters( 'plugin_locale', $locale, 'woocommerce' );
-/**
- * Add hook
- *
- * @since 6.4.0
- */
-do_action('woocommerce_test_hook');
+
 		unload_textdomain( 'woocommerce' );
 		load_textdomain( 'woocommerce', WP_LANG_DIR . '/woocommerce/woocommerce-' . $locale . '.mo' );
 		load_plugin_textdomain( 'woocommerce', false, plugin_basename( dirname( WC_PLUGIN_FILE ) ) . '/i18n/languages' );
