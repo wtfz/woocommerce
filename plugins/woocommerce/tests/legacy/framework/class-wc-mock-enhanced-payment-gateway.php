@@ -36,7 +36,7 @@ class WC_Mock_Enhanced_Payment_Gateway extends WC_Payment_Gateway {
 				'default' => 'yes',
 			),
 			'api_key' => array(
-				'title'   => __( 'API Key', 'woocommerce-admin' ),
+				'title'   => __( 'API Key', 'woocommerce' ),
 				'type'    => 'text',
 				'default' => '',
 			),

@@ -15,8 +15,8 @@ class My_Slot_Filled_Gateway extends WC_Payment_Gateway {
 	public function __construct() {
 		$this->id                 = 'my-slot-filled-gateway';
 		$this->has_fields         = false;
-		$this->method_title       = __( 'Slot filled gateway', 'woocommerce-admin' );
-		$this->method_description = __( 'A gateway demonstrating the use of slot fill for custom configuration screens.', 'woocommerce-admin' );
+		$this->method_title       = __( 'Slot filled gateway', 'woocommerce' );
+		$this->method_description = __( 'A gateway demonstrating the use of slot fill for custom configuration screens.', 'woocommerce' );
 
 		// Load the settings.
 		$this->init_form_fields();
@@ -31,13 +31,13 @@ class My_Slot_Filled_Gateway extends WC_Payment_Gateway {
 	public function init_form_fields() {
 		$this->form_fields = array(
 			'enabled'    => array(
-				'title'   => __( 'Enabled', 'woocommerce-admin' ),
+				'title'   => __( 'Enabled', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => '',
 				'default' => 'no',
 			),
 			'my_setting' => array(
-				'title'   => __( 'My setting', 'woocommerce-admin' ),
+				'title'   => __( 'My setting', 'woocommerce' ),
 				'type'    => 'text',
 				'default' => '',
 			),

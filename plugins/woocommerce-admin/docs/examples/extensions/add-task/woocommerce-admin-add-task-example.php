@@ -17,15 +17,15 @@ function add_task_my_task() {
 		'extended',
 		array(
 			'id'             => 'my-task',
-			'title'          => __( 'My task', 'woocommerce-admin' ),
+			'title'          => __( 'My task', 'woocommerce' ),
 			'content'        => __(
 				'Add your task description here for display in the task list.',
-				'woocommerce-admin'
+				'woocommerce'
 			),
-			'action_label'   => __( 'Do action', 'woocommerce-admin' ),
+			'action_label'   => __( 'Do action', 'woocommerce' ),
 			'is_complete'    => Task::is_task_actioned( 'my-task' ),
 			'can_view'       => 'US' === WC()->countries->get_base_country(),
-			'time'           => __( '2 minutes', 'woocommerce-admin' ),
+			'time'           => __( '2 minutes', 'woocommerce' ),
 			'is_dismissable' => true,
 			'is_snoozeable'  => true,
 		)

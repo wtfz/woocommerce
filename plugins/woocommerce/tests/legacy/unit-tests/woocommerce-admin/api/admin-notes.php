@@ -98,7 +98,7 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		// Create a new note containing an action with a nonce.
 		$note = new \Automattic\WooCommerce\Admin\Notes\Note();
 		$note->set_name( 'nonce-note' );
-		$note->add_action( 'learn-more', __( 'Learn More', 'woocommerce-admin' ), 'https://woocommerce.com/', 'unactioned' );
+		$note->add_action( 'learn-more', __( 'Learn More', 'woocommerce' ), 'https://woocommerce.com/', 'unactioned' );
 		$note->add_nonce_to_action( 'learn-more', 'foo', 'bar' );
 		$note->save();
 
@@ -121,7 +121,7 @@ class WC_Admin_Tests_API_Admin_Notes extends WC_REST_Unit_Test_Case {
 		// Create a new note containing an action with a nonce.
 		$note = new \Automattic\WooCommerce\Admin\Notes\Note();
 		$note->set_name( 'nonce-note' );
-		$note->add_action( 'learn-more', __( 'Learn More', 'woocommerce-admin' ), 'https://example.com/?x=1&y=2', 'unactioned' );
+		$note->add_action( 'learn-more', __( 'Learn More', 'woocommerce' ), 'https://example.com/?x=1&y=2', 'unactioned' );
 		$note->add_nonce_to_action( 'learn-more', 'foo', 'bar' );
 		$note->save();
 

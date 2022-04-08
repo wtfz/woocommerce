@@ -75,11 +75,11 @@ class Section extends Component {
 
 		return (
 			<EllipsisMenu
-				label={ __( 'Choose Apples', 'woocommerce-admin' ) }
+				label={ __( 'Choose Apples', 'woocommerce' ) }
 				renderContent={ ( { onToggle } ) => (
 					<Fragment>
 						<MenuTitle>
-							{ __( 'My Apples', 'woocommerce-admin' ) }
+							{ __( 'My Apples', 'woocommerce' ) }
 						</MenuTitle>
 						{ dashboardItems.map( ( item ) => (
 							<MenuItem
@@ -140,7 +140,7 @@ addFilter(
 			{
 				key: 'dashboard-apples',
 				component: Section,
-				title: __( 'Apples', 'woocommerce-admin' ),
+				title: __( 'Apples', 'woocommerce' ),
 				isVisible: true,
 				icon: wordpress,
 				hiddenBlocks: [],

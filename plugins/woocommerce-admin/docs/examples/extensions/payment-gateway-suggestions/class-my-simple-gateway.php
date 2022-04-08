@@ -15,8 +15,8 @@ class My_Simple_Gateway extends WC_Payment_Gateway {
 	public function __construct() {
 		$this->id                 = 'my-simple-gateway';
 		$this->has_fields         = false;
-		$this->method_title       = __( 'Simple gateway', 'woocommerce-admin' );
-		$this->method_description = __( 'A simple gateway to show extension of gateway installation during onboarding.', 'woocommerce-admin' );
+		$this->method_title       = __( 'Simple gateway', 'woocommerce' );
+		$this->method_description = __( 'A simple gateway to show extension of gateway installation during onboarding.', 'woocommerce' );
 
 		// Load the settings.
 		$this->init_form_fields();
@@ -40,13 +40,13 @@ class My_Simple_Gateway extends WC_Payment_Gateway {
 	public function init_form_fields() {
 		$this->form_fields = array(
 			'enabled' => array(
-				'title'   => __( 'Enabled', 'woocommerce-admin' ),
+				'title'   => __( 'Enabled', 'woocommerce' ),
 				'type'    => 'checkbox',
 				'label'   => '',
 				'default' => 'no',
 			),
 			'api_key' => array(
-				'title'   => __( 'API Key', 'woocommerce-admin' ),
+				'title'   => __( 'API Key', 'woocommerce' ),
 				'type'    => 'text',
 				'default' => '',
 			),
@@ -67,7 +67,7 @@ class My_Simple_Gateway extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_setup_help_text() {
-		return __( 'Help text displayed beneath the configuration form.', 'woocommerce-admin' );
+		return __( 'Help text displayed beneath the configuration form.', 'woocommerce' );
 	}
 
 	/**

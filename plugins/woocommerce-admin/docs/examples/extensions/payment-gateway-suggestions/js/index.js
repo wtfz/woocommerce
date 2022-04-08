@@ -29,11 +29,11 @@ const MyPaymentGatewaySuggestion = () => {
 						<p>
 							{ __(
 								"This payment's configuration screen can be slot filled with any custom content.",
-								'woocommerce-admin'
+								'woocommerce'
 							) }
 						</p>
 						<button onClick={ completeSetup }>
-							{ __( 'Complete', 'woocommerce-admin' ) }
+							{ __( 'Complete', 'woocommerce' ) }
 						</button>
 					</>
 				);

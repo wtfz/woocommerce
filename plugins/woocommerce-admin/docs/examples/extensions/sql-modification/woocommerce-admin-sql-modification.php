@@ -44,15 +44,15 @@
 function add_currency_settings() {
 	$currencies = array(
 		array(
-			'label' => __( 'United States Dollar', 'woocommerce-admin' ),
+			'label' => __( 'United States Dollar', 'woocommerce' ),
 			'value' => 'USD',
 		),
 		array(
-			'label' => __( 'New Zealand Dollar', 'woocommerce-admin' ),
+			'label' => __( 'New Zealand Dollar', 'woocommerce' ),
 			'value' => 'NZD',
 		),
 		array(
-			'label' => __( 'South African Rand', 'woocommerce-admin' ),
+			'label' => __( 'South African Rand', 'woocommerce' ),
 			'value' => 'ZAR',
 		),
 	);

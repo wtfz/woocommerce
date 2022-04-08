@@ -137,7 +137,7 @@ class WC_Admin_Tests_API_Onboarding_Profiles extends WC_REST_Unit_Test_Case {
 			function( $properties ) {
 				$properties['test_profile_datum'] = array(
 					'type'        => 'array',
-					'description' => __( 'Test onboarding profile extensibility.', 'woocommerce-admin' ),
+					'description' => __( 'Test onboarding profile extensibility.', 'woocommerce' ),
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				);
