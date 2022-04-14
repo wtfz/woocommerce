@@ -169,13 +169,6 @@ final class WooCommerce {
 	 * WooCommerce Constructor.
 	 */
 	public function __construct() {
-/**
- * Action
- *
- * @since 6.4.0
- */
-do_action( 'woo_test' );
-
 		$this->define_constants();
 		$this->define_tables();
 		$this->includes();
