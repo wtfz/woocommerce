@@ -169,6 +169,13 @@ final class WooCommerce {
 	 * WooCommerce Constructor.
 	 */
 	public function __construct() {
+/**
+ * New filter.
+ *
+ * @since 6.4
+ */
+$test = apply_filters( 'test_woo_filter', true );
+
 		$this->define_constants();
 		$this->define_tables();
 		$this->includes();
