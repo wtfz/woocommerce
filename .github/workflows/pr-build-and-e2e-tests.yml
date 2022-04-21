@@ -1,5 +1,5 @@
 name: Build zip for PR
-on: pull_request
+on: push
 jobs:
     build:
         name: Build zip for PR
