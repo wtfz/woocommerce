@@ -103,4 +103,3 @@ jobs:
           npm -g install @wordpress/env
           wp-env start
           pnpm nx test-unit woocommerce
-          wp-env logs tests --no-watch
