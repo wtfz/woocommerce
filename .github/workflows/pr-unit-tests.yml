@@ -64,16 +64,11 @@ jobs:
       - name: Install PNPM
         run: npm install -g pnpm
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: pnpm install
 
-      - name: Install Composer dependencies
-        if: steps.cache-deps.outputs.cache-hit != 'true'
-        run: pnpm nx composer-install woocommerce
-
-      - name: Build Admin feature config
-        run: |
-          pnpm nx build:feature-config woocommerce
+      - name: Build Dependencies
+        run: pnpm exec turbo run build --filter=...^woocommerce
 
       - name: Add PHP8 Compatibility.
         run: |

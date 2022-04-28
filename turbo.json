@@ -19,6 +19,13 @@
                 "build-types/**"
             ]
         },
+        "build:zip": {
+            "dependsOn":  [ "build" ],
+            "outputs": [
+                "*.zip"
+            ],
+            "cache": false
+        },
         "test": {
             "dependsOn":  [ "build" ],
             "inputs": [
