@@ -4,7 +4,7 @@
   "description": "API tests for WooCommerce",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test:e2e": "jest",
     "test:api": "jest --group=api",
     "test:hello": "jest --group=hello",
     "make:collection": "node utils/api-collection/build-collection.js",

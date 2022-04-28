@@ -19,6 +19,23 @@
                 "build-types/**"
             ]
         },
+        "test": {
+            "dependsOn":  [ "build" ],
+            "inputs": [
+                "src/**.js",
+                "src/**.ts",
+                "src/**.tsx",
+                "src/**.php",
+                "includes/**.php"
+            ],
+            "outputs": [
+                "dist/**",
+                "build/**",
+                "build-module/**",
+                "build-style/**",
+                "build-types/**"
+            ]
+        },
         "woocommerce#build": {
             "dependsOn":  [ 
                 "^build",
