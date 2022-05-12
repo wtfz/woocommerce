@@ -2,10 +2,10 @@
  * External dependencies
  */
 import { controls as dataControls } from '@wordpress/data-controls';
+import apiFetch, { APIFetchOptions } from '@wordpress/api-fetch';
+import { AnyAction } from 'redux';
 
-import apiFetch from '@wordpress/api-fetch';
-
-export const fetchWithHeaders = ( options ) => {
+export const fetchWithHeaders = ( options: APIFetchOptions ) => {
 	return {
 		type: 'FETCH_WITH_HEADERS',
 		options,
@@ -14,8 +14,8 @@ export const fetchWithHeaders = ( options ) => {
 
 const controls = {
 	...dataControls,
-	FETCH_WITH_HEADERS( { options } ) {
-		return apiFetch( { ...options, parse: false } )
+	FETCH_WITH_HEADERS( action: AnyAction ) {
+		return apiFetch< Response >( { ...action.options, parse: false } )
 			.then( ( response ) => {
 				return Promise.all( [
 					response.headers,
