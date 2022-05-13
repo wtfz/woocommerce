@@ -12,4 +12,5 @@ export type BaseQueryParams = {
 	orderby: 'date' | 'id' | 'include' | 'title' | 'slug';
 	parent: number[];
 	parent_exclude: number[];
+	_fields: string[];
 };
