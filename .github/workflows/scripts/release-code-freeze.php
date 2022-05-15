@@ -39,6 +39,51 @@ $milestone_major_minor = number_format( $latest_float + 0.2, 1 );
 $release_branch_to_create = "release/{$branch_major_minor}";
 $milestone_to_create      = "{$milestone_major_minor}.0";
 
+if ( getenv( 'GITHUB_OUTPUTS' ) ) {
+	echo '::set-output name=release_version::' . $branch_major_minor . PHP_EOL;
+	echo '::set-output name=branch::' . $release_branch_to_create . PHP_EOL;
+	echo '::set-output name=milestone::' . $milestone_to_create . PHP_EOL;
+}
+
+if ( getenv( 'CREATE_CHANGELOG_PR' ) ) {
+	$working_dir     = posix_getcwd();
+	$woocommerce_dir = __DIR__ . '/../../../plugins/woocommerce';
+	$change_dir      = $woocommerce_dir . '/changelog';
+	$changelogger    = $woocommerce_dir . '/vendor/bin/changelogger';
+
+	// Read the change files in the change dir prior to running changelogger.
+	$change_files = scandir( $change_dir );
+	if ( false === $change_files ) {
+		echo '*** Error: Unable to read change files' . PHP_EOL;
+		return;
+	}
+
+	// Filter out hidden files and current/parent directory.
+	$change_files = array_filter( $change_files, function( $file ) {
+		return substr( $file, 0, 1 ) !== '.';
+	} );
+
+	print_r( $change_files );
+
+	chdir( $woocommerce_dir );
+
+	$output      = array();
+	$result_code = 0;
+	exec( escapeshellcmd( $changelogger ) . ' write -n --use-version ' . escapeshellarg( $branch_major_minor ), $output, $result_code );
+
+	chdir( $working_dir );
+
+	if ( 0 === $result_code ) {
+
+	} else {
+		echo '*** Error: Unable to generate changelog file...' . PHP_EOL;
+		echo 'Changelogger output: ' . PHP_EOL . implode( PHP_EOL, $output ) . PHP_EOL . PHP_EOL;
+		return;
+	}
+
+	return;
+}
+
 if ( getenv( 'DRY_RUN' ) ) {
 	echo 'DRY RUN: Skipping actual creation of release branch and milestone...' . PHP_EOL;
 	echo "Release Branch: {$release_branch_to_create}" . PHP_EOL;
