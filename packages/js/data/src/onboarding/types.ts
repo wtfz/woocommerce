@@ -62,7 +62,7 @@ export type OnboardingState = {
 	profileItems: ProfileItemsState;
 	taskLists: Record< string, TaskListType >;
 	paymentMethods: Plugin[];
-	productTypes: Product[];
+	productTypes: OnboardingProductType[];
 	emailPrefill: string;
 	// TODO clarify what the error record's type is
 	errors: Record< string, unknown >;
@@ -136,7 +136,7 @@ export type MethodFields = {
 	value?: string;
 };
 
-export type Product = {
+export type OnboardingProductType = {
 	default?: boolean;
 	label: string;
 	product?: number;

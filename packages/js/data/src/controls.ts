@@ -5,7 +5,9 @@ import { controls as dataControls } from '@wordpress/data-controls';
 import apiFetch, { APIFetchOptions } from '@wordpress/api-fetch';
 import { AnyAction } from 'redux';
 
-export const fetchWithHeaders = ( options: APIFetchOptions ) => {
+export const fetchWithHeaders = (
+	options: APIFetchOptions
+): AnyAction & { options: APIFetchOptions } => {
 	return {
 		type: 'FETCH_WITH_HEADERS',
 		options,
