@@ -45,9 +45,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Composer dependencies
-        run: pnpm nx composer-install woocommerce
-
       - name: Run code sniff
         continue-on-error: true
         working-directory: plugins/woocommerce

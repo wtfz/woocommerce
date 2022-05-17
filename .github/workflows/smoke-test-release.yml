@@ -34,16 +34,13 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
-            - name: Install Composer dependencies
-              run: pnpm nx composer-install-no-dev woocommerce
-
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                 php-version: '7.4'
 
             - name: Run build
-              run: pnpm nx build woocommerce
+              run: pnpm exec turbo build --filter=woocommerce
 
             - name: Run smoke test.
               working-directory: plugins/woocommerce
@@ -122,7 +119,7 @@ jobs:
 
             - name: Run build
               working-directory: package/woocommerce
-              run: pnpm nx build woocommerce
+              run: pnpm exec turbo build --filter=woocommerce
 
             - name: Download WooCommerce release zip
               working-directory: tmp
@@ -136,7 +133,7 @@ jobs:
               working-directory: package/woocommerce
               env:
                   LATEST_WP_VERSION_MINUS: ${{ matrix.wp }}
-              run: pnpm nx docker-up woocommerce
+              run: pnpm docker:up --filter=woocommerce
 
             - name: Run tests command.
               working-directory: package/woocommerce/plugins/woocommerce
@@ -213,7 +210,7 @@ jobs:
 
             - name: Run build
               working-directory: package/woocommerce
-              run: pnpm nx build woocommerce
+              run: pnpm exec turbo build --filter=woocommerce
 
             - name: Download WooCommerce release zip
               working-directory: tmp
@@ -227,7 +224,7 @@ jobs:
               working-directory: package/woocommerce
               env:
                   LATEST_WP_VERSION_MINUS: ${{ matrix.wp }}
-              run: pnpm nx docker-up woocommerce
+              run: pnpm docker:up --filter=woocommerce
 
             - name: Run tests command.
               working-directory: package/woocommerce/plugins/woocommerce

@@ -28,16 +28,13 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
-            - name: Install Composer dependencies
-              run: pnpm nx composer-install-no-dev woocommerce
-
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                 php-version: '7.4'
 
             - name: Run build
-              run: pnpm nx build woocommerce
+              run: pnpm exec turbo run build --filter=woocommerce
 
             - name: Load docker images and start containers.
               working-directory: plugins/woocommerce
@@ -85,16 +82,13 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
-            - name: Install Composer dependencies
-              run: pnpm nx composer-install woocommerce
-
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                 php-version: '7.4'
 
             - name: Run build
-              run: pnpm nx build woocommerce
+              run: pnpm exec turbo run build --filter=woocommerce
 
             - name: Load docker images and start containers.
               working-directory: plugins/woocommerce
@@ -141,16 +135,13 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
-            - name: Install Composer dependencies
-              run: pnpm nx composer-install woocommerce
-
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                 php-version: '7.4'
 
             - name: Run build
-              run: pnpm nx build woocommerce
+              run: pnpm exec turbo run build --filter=woocommerce
 
             - name: Workaround to use initialization file with prepopulated data.
               working-directory: plugins/woocommerce/tests/e2e/docker
