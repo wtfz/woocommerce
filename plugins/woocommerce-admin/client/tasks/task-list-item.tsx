@@ -18,10 +18,12 @@ import { useCallback } from '@wordpress/element';
 import { useDispatch } from '@wordpress/data';
 import { WooOnboardingTaskListItem } from '@woocommerce/onboarding';
 import { History } from 'history';
+import { getAdminLink } from '@woocommerce/settings';
 
 /**
  * Internal dependencies
  */
+import { isWCAdmin } from '~/dashboard/utils';
 import './task-list.scss';
 
 export type TaskListItemProps = {
@@ -133,11 +135,25 @@ export const TaskListItem: React.FC< TaskListItemProps > = ( {
 		if ( actionUrl ) {
 			if ( actionUrl.startsWith( 'http' ) ) {
 				window.location.href = actionUrl;
-			} else {
-				( getHistory() as History ).push(
+				return;
+			}
+
+			if ( ! isWCAdmin( window.location.href ) ) {
+				window.location.href = getAdminLink(
 					getNewPath( {}, actionUrl, {} )
 				);
+				return;
 			}
+
+			( getHistory() as History ).push( getNewPath( {}, actionUrl, {} ) );
+
+			return;
+		}
+
+		if ( ! isWCAdmin( window.location.href ) ) {
+			window.location.href = getAdminLink(
+				getNewPath( { task: id }, '/', {} )
+			);
 			return;
 		}
 
@@ -159,6 +175,13 @@ export const TaskListItem: React.FC< TaskListItemProps > = ( {
 				trackClick();
 
 				if ( props.onClick ) {
+					if ( ! isWCAdmin( window.location.href ) ) {
+						window.location.href = getAdminLink(
+							'admin.php?page=wc-admin'
+						);
+						return;
+					}
+
 					return props.onClick();
 				}
 
