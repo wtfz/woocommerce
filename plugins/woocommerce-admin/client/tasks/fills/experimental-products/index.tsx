@@ -2,17 +2,16 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
-import {
-	WooOnboardingTask,
-	useProductTaskExperiment,
-} from '@woocommerce/onboarding';
+import { WooOnboardingTask } from '@woocommerce/onboarding';
 import { Text } from '@woocommerce/experimental';
 import { registerPlugin } from '@wordpress/plugins';
 import { useMemo, useState } from '@wordpress/element';
 import { Button, Spinner } from '@wordpress/components';
 import { getAdminLink } from '@woocommerce/settings';
 import { Icon, chevronDown, chevronUp } from '@wordpress/icons';
-
+import { recordEvent } from '@woocommerce/tracks';
+import { SETTINGS_STORE_NAME } from '@woocommerce/data';
+import { useSelect } from '@wordpress/data';
 /**
  * Internal dependencies
  */
@@ -27,6 +26,8 @@ import { LoadSampleProductType } from './constants';
 import LoadSampleProductModal from '../components/load-sample-product-modal';
 import useLoadSampleProducts from '../components/use-load-sample-products';
 import useRecordCompletionTime from '../use-record-completion-time';
+import { getCountryCode } from '~/dashboard/utils';
+import { useProductTaskExperiment } from './use-product-layout-experiment';
 
 const getOnboardingProductType = (): string[] => {
 	const onboardingData = getAdminSetting( 'onboarding' );
@@ -53,17 +54,36 @@ const ViewControlButton: React.FC< {
 
 export const Products = () => {
 	const [ isExpanded, setIsExpanded ] = useState< boolean >( false );
-	const [
-		isLoadingExperiment,
+	const {
+		isLoading: isLoadingExperiment,
 		experimentLayout,
-	] = useProductTaskExperiment();
+	} = useProductTaskExperiment();
+
+	const { isStoreInUS } = useSelect( ( select ) => {
+		const { getSettings } = select( SETTINGS_STORE_NAME );
+		const { general: settings = {} } = getSettings< {
+			general?: { [ key: string ]: unknown };
+		} >( 'general' );
+
+		const country =
+			typeof settings.woocommerce_default_country === 'string'
+				? settings.woocommerce_default_country
+				: '';
+
+		return {
+			isStoreInUS: getCountryCode( country ) === 'US',
+		};
+	} );
 
 	const surfacedProductTypeKeys = getSurfacedProductTypeKeys(
 		getOnboardingProductType()
 	);
 
 	const productTypes = useProductTypeListItems(
-		getProductTypes(),
+		// Subscriptions only in the US
+		getProductTypes( {
+			exclude: isStoreInUS ? [] : [ 'subscription' ],
+		} ),
 		surfacedProductTypeKeys
 	);
 	const { recordCompletionTime } = useRecordCompletionTime( 'products' );
@@ -77,7 +97,7 @@ export const Products = () => {
 					recordCompletionTime();
 				},
 			} ) ),
-		[ recordCompletionTime ]
+		[ recordCompletionTime, productTypes ]
 	);
 
 	const {
@@ -113,7 +133,7 @@ export const Products = () => {
 	}, [
 		surfacedProductTypeKeys,
 		isExpanded,
-		productTypes,
+		productTypesWithTimeRecord,
 		experimentLayout,
 		loadSampleProduct,
 	] );
@@ -147,7 +167,14 @@ export const Products = () => {
 						) }
 						<ViewControlButton
 							isExpanded={ isExpanded }
-							onClick={ () => setIsExpanded( ! isExpanded ) }
+							onClick={ () => {
+								if ( ! isExpanded ) {
+									recordEvent(
+										'tasklist_view_more_product_types_click'
+									);
+								}
+								setIsExpanded( ! isExpanded );
+							} }
 						/>
 						<Footer />
 					</div>
@@ -158,13 +185,18 @@ export const Products = () => {
 	);
 };
 
+const ExperimentalProductsFill = () => {
+	const { isLoading, experimentLayout } = useProductTaskExperiment();
+
+	return isLoading ? null : (
+		<WooOnboardingTask id="products" variant={ experimentLayout }>
+			<Products />
+		</WooOnboardingTask>
+	);
+};
+
 registerPlugin( 'wc-admin-onboarding-task-products', {
 	// @ts-expect-error 'scope' does exist. @types/wordpress__plugins is outdated.
 	scope: 'woocommerce-tasks',
-	render: () => (
-		// @ts-expect-error WooOnboardingTask is a pure JS component.
-		<WooOnboardingTask id="products">
-			<Products />
-		</WooOnboardingTask>
-	),
+	render: () => <ExperimentalProductsFill />,
 } );

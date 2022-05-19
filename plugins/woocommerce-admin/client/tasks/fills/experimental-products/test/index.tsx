@@ -3,8 +3,8 @@
  */
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useProductTaskExperiment } from '@woocommerce/onboarding';
 import { recordEvent } from '@woocommerce/tracks';
+import { useSelect } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -12,6 +12,7 @@ import { recordEvent } from '@woocommerce/tracks';
 import { Products } from '../';
 import { defaultSurfacedProductTypes, productTypes } from '../constants';
 import { getAdminSetting } from '~/utils/admin-settings';
+import { useProductTaskExperiment } from '../use-product-layout-experiment';
 
 jest.mock( '@wordpress/data', () => ( {
 	...jest.requireActual( '@wordpress/data' ),
@@ -22,8 +23,11 @@ jest.mock( '~/utils/admin-settings', () => ( {
 	getAdminSetting: jest.fn(),
 } ) );
 
-jest.mock( '@woocommerce/onboarding', () => ( {
-	useProductTaskExperiment: jest.fn().mockReturnValue( [ false, 'stacked' ] ),
+jest.mock( '../use-product-layout-experiment', () => ( {
+	useProductTaskExperiment: jest.fn().mockReturnValue( {
+		isLoading: false,
+		experimentLayout: 'stacked',
+	} ),
 } ) );
 
 jest.mock( '../use-create-product-by-type', () => ( {
@@ -44,6 +48,15 @@ jest.mock( '@woocommerce/tracks', () => ( { recordEvent: jest.fn() } ) );
 describe( 'Products', () => {
 	beforeEach( () => {
 		jest.clearAllMocks();
+		( useSelect as jest.Mock ).mockImplementation( ( fn ) =>
+			fn( () => ( {
+				getSettings: () => ( {
+					general: {
+						woocommerce_default_country: 'US',
+					},
+				} ),
+			} ) )
+		);
 	} );
 
 	it( 'should render default products types when onboardingData.profile.productType is null', () => {
@@ -72,6 +85,66 @@ describe( 'Products', () => {
 		expect( queryByText( 'Digital product' ) ).toBeInTheDocument();
 		expect( queryByRole( 'menu' )?.childElementCount ).toBe( 1 );
 		expect( queryByText( 'View more product types' ) ).toBeInTheDocument();
+	} );
+
+	it( 'should not render subscriptions products type when store is not in the US', () => {
+		( getAdminSetting as jest.Mock ).mockImplementation( () => ( {
+			profile: {
+				product_types: [ 'subscriptions' ],
+			},
+		} ) );
+		( useSelect as jest.Mock ).mockImplementation( ( fn ) =>
+			fn( () => ( {
+				getSettings: () => ( {
+					general: {
+						woocommerce_default_country: 'GB',
+					},
+				} ),
+			} ) )
+		);
+		const { queryByText } = render( <Products /> );
+
+		expect( queryByText( 'Subscription product' ) ).not.toBeInTheDocument();
+	} );
+
+	it( 'should not render subscriptions products type when store country is unknown', () => {
+		( getAdminSetting as jest.Mock ).mockImplementation( () => ( {
+			profile: {
+				product_types: [ 'subscriptions' ],
+			},
+		} ) );
+		( useSelect as jest.Mock ).mockImplementation( ( fn ) =>
+			fn( () => ( {
+				getSettings: () => ( {
+					general: {
+						woocommerce_default_country: undefined,
+					},
+				} ),
+			} ) )
+		);
+		const { queryByText } = render( <Products /> );
+
+		expect( queryByText( 'Subscription product' ) ).not.toBeInTheDocument();
+	} );
+
+	it( 'should render subscriptions products type when store is in the US', () => {
+		( getAdminSetting as jest.Mock ).mockImplementation( () => ( {
+			profile: {
+				product_types: [ 'subscriptions' ],
+			},
+		} ) );
+		( useSelect as jest.Mock ).mockImplementation( ( fn ) =>
+			fn( () => ( {
+				getSettings: () => ( {
+					general: {
+						woocommerce_default_country: 'US',
+					},
+				} ),
+			} ) )
+		);
+		const { queryByText } = render( <Products /> );
+
+		expect( queryByText( 'Subscription product' ) ).toBeInTheDocument();
 	} );
 
 	it( 'clicking on suggested product should fire event tasklist_product_template_selection with is_suggested:true and task_completion_time', () => {
@@ -128,11 +201,15 @@ describe( 'Products', () => {
 
 		expect( recordEvent ).toHaveBeenNthCalledWith(
 			1,
+			'tasklist_view_more_product_types_click'
+		);
+		expect( recordEvent ).toHaveBeenNthCalledWith(
+			2,
 			'tasklist_product_template_selection',
 			{ is_suggested: false, product_type: 'grouped' }
 		);
 		expect( recordEvent ).toHaveBeenNthCalledWith(
-			2,
+			3,
 			'task_completion_time',
 			{ task_name: 'products', time: '0-2s' }
 		);
@@ -189,10 +266,12 @@ describe( 'Products', () => {
 	} );
 
 	it( 'should show spinner when layout experiment is loading', async () => {
-		( useProductTaskExperiment as jest.Mock ).mockImplementation( () => [
-			true,
-			'card',
-		] );
+		( useProductTaskExperiment as jest.Mock ).mockImplementation( () => {
+			return {
+				isLoading: true,
+				experimentLayout: 'card',
+			};
+		} );
 		const { container } = render( <Products /> );
 		expect(
 			container.getElementsByClassName( 'components-spinner' )
@@ -200,10 +279,12 @@ describe( 'Products', () => {
 	} );
 
 	it( 'should render card layout when experiment is assigned', async () => {
-		( useProductTaskExperiment as jest.Mock ).mockImplementation( () => [
-			false,
-			'card',
-		] );
+		( useProductTaskExperiment as jest.Mock ).mockImplementation( () => {
+			return {
+				isLoading: false,
+				experimentLayout: 'card',
+			};
+		} );
 		const { container } = render( <Products /> );
 		expect(
 			container.getElementsByClassName(
@@ -213,10 +294,12 @@ describe( 'Products', () => {
 	} );
 
 	it( 'should render stacked layout when experiment is assigned', async () => {
-		( useProductTaskExperiment as jest.Mock ).mockImplementation( () => [
-			false,
-			'stacked',
-		] );
+		( useProductTaskExperiment as jest.Mock ).mockImplementation( () => {
+			return {
+				isLoading: false,
+				experimentLayout: 'stacked',
+			};
+		} );
 		const { container } = render( <Products /> );
 		expect(
 			container.getElementsByClassName( 'woocommerce-products-stack' )

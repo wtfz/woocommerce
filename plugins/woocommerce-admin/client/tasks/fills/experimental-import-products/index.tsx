@@ -49,7 +49,9 @@ export const Products = () => {
 	} );
 
 	const productTypeListItems = useProductTypeListItems(
-		getProductTypes( [ 'subscription' ] ),
+		getProductTypes( {
+			exclude: [ 'subscription' ],
+		} ),
 		[],
 		{
 			onClick: recordCompletionTime,
@@ -90,8 +92,7 @@ registerPlugin( 'wc-admin-onboarding-task-products', {
 	// @ts-expect-error 'scope' does exist. @types/wordpress__plugins is outdated.
 	scope: 'woocommerce-tasks',
 	render: () => (
-		// @ts-expect-error WooOnboardingTask is a pure JS component.
-		<WooOnboardingTask id="products">
+		<WooOnboardingTask id="products" variant="import">
 			<Products />
 		</WooOnboardingTask>
 	),
