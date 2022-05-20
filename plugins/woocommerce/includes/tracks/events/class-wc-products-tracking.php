@@ -23,6 +23,7 @@ class WC_Products_Tracking {
 		add_action( 'edit_post', array( $this, 'track_product_updated' ), 10, 2 );
 		add_action( 'wp_after_insert_post', array( $this, 'track_product_published' ), 10, 4 );
 		add_action( 'created_product_cat', array( $this, 'track_product_category_created' ) );
+		add_action( 'edited_product_cat', array( $this, 'track_product_category_updated' ) );
 		add_action( 'add_meta_boxes_product', array( $this, 'track_product_updated_client_side' ), 10 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_product_tracking_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'possibly_add_attribute_tracking_scripts' ) );
@@ -194,7 +195,7 @@ class WC_Products_Tracking {
 	 * @param int $category_id Category ID.
 	 */
 	public function track_product_category_created( $category_id ) {
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		// Only track category creation from the edit product screen or the
 		// category management screen (which both occur via AJAX).
 		if (
@@ -210,15 +211,46 @@ class WC_Products_Tracking {
 			return;
 		}
 
-		$category   = get_term( $category_id, 'product_cat' );
+		$category = get_term( $category_id, 'product_cat' );
+		$parent_category = $category->parent > 0 ? 'Other' : 'None';
+		if ( $category->parent > 0 ) {
+			$parent = get_term( $category_id, 'product_cat' );
+			if ( 'uncategorized' === $parent->name ) {
+				$parent_category = 'Uncategorized';
+			}
+		}
+
 		$properties = array(
-			'category_id' => $category_id,
-			'parent_id'   => $category->parent,
-			'page'        => ( 'add-tag' === $_POST['action'] ) ? 'categories' : 'product',
+			'category_id'     => $category_id,
+			'parent_id'       => $category->parent,
+			'parent_category' => $parent_category,
+			'page'            => ( 'add-tag' === $_POST['action'] ) ? 'categories' : 'product',
+			'display_type'    => isset( $_POST['display_type'] ) ? wp_unslash( $_POST['display_type'] ) : '',
+			'image'           => isset( $_POST['product_cat_thumbnail_id'] ) && '' !== $_POST['product_cat_thumbnail_id'] ? 'Yes' : 'No',
 		);
 		// phpcs:enable
 
 		WC_Tracks::record_event( 'product_category_add', $properties );
+	}
+
+	/**
+	 * Send a Tracks event when a product category is updated.
+	 *
+	 * @param int $category_id Category ID.
+	 */
+	public function track_product_category_updated( $category_id ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		// Only track category creation from the edit product screen or the
+		// category management screen (which both occur via AJAX).
+		if (
+			empty( $_POST['action'] ) ||
+			( 'editedtag' !== $_POST['action'] && 'inline-save-tax' !== $_POST['action'] )
+		) {
+			return;
+		}
+		// phpcs:enable
+
+		WC_Tracks::record_event( 'product_category_update' );
 	}
 
 	/**
